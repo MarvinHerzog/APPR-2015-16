@@ -14,5 +14,8 @@ pri tem pa želim prikazati spreminjanje navedenih podatkov skozi čas ter jih g
 
 ## Viri:
 http://www.sipri.org/research/armaments/milex/milex_database
+  Excel
+  
 http://data.worldbank.org/indicator/MS.MIL.XPND.GD.ZS
-http://data.worldbank.org/indicator/MS.MIL.XPND.GD.ZS
+  Spletni vir
+
