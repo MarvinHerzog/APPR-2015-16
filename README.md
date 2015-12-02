@@ -17,6 +17,7 @@ http://www.sipri.org/research/armaments/milex/milex_database
   Excel
   
 http://data.worldbank.org/indicator/MS.MIL.XPND.GD.ZS
+
 https://en.wikipedia.org/wiki/Member_states_of_NATO#Military_expenditures
   Spletni viri
 
