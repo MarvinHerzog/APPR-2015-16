@@ -17,7 +17,9 @@ http://www.sipri.org/research/armaments/milex/milex_database
   Excel
   
 http://data.worldbank.org/indicator/MS.MIL.XPND.GD.ZS
-  Spletni vir
+http://www.statista.com/statistics/263127/military-spending-of-the-nato-countries-1990-2011/
+  Spletni viri
+
 
 
 ## Program
