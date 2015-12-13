@@ -25,11 +25,16 @@ NATO[13,7] <- 0
 for(i in 2:7){
   NATO[,i] = gsub(",","",NATO[,i])
   NATO[,i] <- as.numeric(NATO[,i])
-  print(class(NATO[,i]))
   
 }
 
 
 View(NATO)
-NORD1 = NATO[order(NATO$'Military expenditures 2014 US millions',decreasing = TRUE,]
-ggplot(NORD1) + aes(y = Country, x = NORD1$`Military expenditures 2014 US millions`) +geom_point()
+NORD1 = NATO[order(NATO$'Military expenditures 2014 US millions',decreasing = TRUE),]
+
+
+#bar plot, celoten NATO
+ggplot(NORD1) + aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +xlab("Country")+geom_bar(stat="identity") + coord_flip()
+
+
+ggplot(NORD1[-c(1,2),]) + aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +geom_bar(stat="identity") + xlab("Country")+ coord_flip()
