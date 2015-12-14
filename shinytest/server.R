@@ -7,7 +7,7 @@
 
 library(shiny)
 require(dplyr)
-require(rvest)
+require(rvest) 
 require(gsubfn)
 require(ggplot2)
 require(reshape2)
@@ -57,11 +57,7 @@ shinyServer(function(input, output) {
   
   row.names(GDP) <- GDP[,1]
   GDP = GDP[,-1]
-  print(row.names(GDP))
-  
-  output$text1 <- renderTable({ 
-    View(as.list(row.names(GDP)))
-  })
+
   
   p22 <- reactive({
 
