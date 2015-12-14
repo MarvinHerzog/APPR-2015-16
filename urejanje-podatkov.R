@@ -3,7 +3,7 @@ require(dplyr)
 require(rvest)
 require(gsubfn)
 require(ggplot2)
-
+require(reshape2)
 
 convert.magic <- function(obj, type){
   FUN1 <- switch(type,
@@ -14,7 +14,7 @@ convert.magic <- function(obj, type){
   as.data.frame(out)
 }
 
-
+options(stringsAsFactors = FALSE)
 
 
 
@@ -38,10 +38,13 @@ filter(CurUSD,CurUSD$'1988'!="")->CurUSD
 CurUSD <- apply(CurUSD,2,function(x) gsub("xxx",NA,x))
 CurUSD <- apply(CurUSD,2,function(x) gsub("\\.\\s\\.",NA,x))
 
+CurUSD <- as.data.frame(CurUSD)
+
 for(i in 2:28){
   CurUSD[,i] <- as.numeric(CurUSD[,i])
   
 }
+CurUSD <- filter(CurUSD, !apply(is.na(CurUSD[,-1]),1,all)) #po želji
 write.table(CurUSD, file = "podatki/USD-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
 
 #uredimo NATO
@@ -95,12 +98,16 @@ filter(GDP,GDP$'1988'!="")->GDP
 GDP <- apply(GDP,2,function(x) gsub("xxx",NA,x))
 GDP <- apply(GDP,2,function(x) gsub("\\.\\s\\.",NA,x))
 GDP <- apply(GDP,2,function(x) gsub("%","",x))
+GDP <- apply(GDP,2,function(x) gsub("\\s+$","",x))
 
-ADD = data.frame()
+
+GDP <- as.data.frame(GDP)
 
 for(i in 2:28){
-  GDP[,i] <- as.numeric(GDP[,i],na.rm=TRUE)
+  GDP[,i] <- as.numeric(GDP[,i])
   
 }
 
-#GDP <- apply(GDP,2,function(x){ x/100})
+GDP[2:28] <- apply(GDP[2:28],2,function(x){x/100})
+GDP <- filter(GDP, !apply(is.na(GDP[,-1]),1,all)) #po želji
+write.table(GDP, file = "podatki/GDP-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
