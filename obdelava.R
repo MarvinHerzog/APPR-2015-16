@@ -1,4 +1,9 @@
 require(reshape2)
+require(rworldmap)
+require(ggplot2)
+require(dplyr)
+library(maptools)
+
 read.csv(file = "podatki/NATO-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> NATO
 read.csv(file = "podatki/USD-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> CurUSD
 read.csv(file = "podatki/GDP-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> GDP
@@ -36,4 +41,15 @@ test_data <- data.frame(
   var1 = 150 + c(0, cumsum(runif(49, -10, 10))),
   date = seq.Date(as.Date("2002-01-01"), by="1 month", length.out=100))
 
+obcine <- readShapeSpatial("podatki/mape/ne_110m_admin_0_countries.shp")
+testi <- merge(obcine, sel2)
+
+ptm <- proc.time()
+plot(obcine,xlim=c(-124.5, -115),ylim=c(15, 115))
+proc.time() - ptm
+
+
+
+
+proc.time() - ptm
 

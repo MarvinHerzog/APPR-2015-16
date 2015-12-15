@@ -5,14 +5,7 @@ require(gsubfn)
 require(ggplot2)
 require(reshape2)
 
-convert.magic <- function(obj, type){
-  FUN1 <- switch(type,
-                 character = as.character,
-                 numeric = as.numeric,
-                 factor = as.factor)
-  out <- lapply(obj, FUN1)
-  as.data.frame(out)
-}
+
 
 options(stringsAsFactors = FALSE)
 
