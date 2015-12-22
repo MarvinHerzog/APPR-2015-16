@@ -8,4 +8,4 @@ source("lib/uvozi.zemljevid.r", encoding = "UTF-8")
 
 
 
-source("obdelava.r", encoding = "UTF-8")
+source("obdelava.R", encoding = "UTF-8")
