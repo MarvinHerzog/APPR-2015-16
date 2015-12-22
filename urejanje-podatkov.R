@@ -104,3 +104,38 @@ for(i in 2:28){
 GDP[2:28] <- apply(GDP[2:28],2,function(x){x/100})
 GDP <- filter(GDP, !apply(is.na(GDP[,-1]),1,all)) #po želji
 write.table(GDP, file = "podatki/GDP-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
+
+
+#uredimo Per Capita
+PerCap = read.csv(file = "podatki/SIPRI Milex data 1988-2014 Nov15 - Per capita.csv", sep = ";", dec = ".")
+View(PerCap)
+PerCap <- data.frame(lapply(PerCap, as.character), stringsAsFactors=FALSE)
+
+names(PerCap) <- lapply(PerCap[5,],as.character)
+PerCap[,-c(30:71)] ->PerCap
+PerCap[-c(192:199),] ->PerCap
+PerCap[-c(1:5),] ->PerCap
+PerCap[,-2] ->PerCap
+
+#for(i in 1:28){
+#  PerCap[,i] <- as.character(PerCap[,i])
+
+#}
+
+filter(PerCap,PerCap$'1988'!="")->PerCap
+PerCap <- apply(PerCap,2,function(x) gsub("xxx",NA,x))
+PerCap <- apply(PerCap,2,function(x) gsub("\\.\\s\\.",NA,x))
+PerCap <- apply(PerCap,2,function(x) gsub("%","",x))
+PerCap <- apply(PerCap,2,function(x) gsub("\\s+$","",x))
+
+
+PerCap <- as.data.frame(PerCap)
+
+for(i in 2:28){
+  PerCap[,i] <- as.numeric(PerCap[,i])
+  
+}
+
+PerCap[2:28] <- apply(PerCap[2:28],2,function(x){x/100})
+PerCap <- filter(PerCap, !apply(is.na(PerCap[,-1]),1,all)) #po želji
+write.table(PerCap, file = "podatki/PerCap-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")

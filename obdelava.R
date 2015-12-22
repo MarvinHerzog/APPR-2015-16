@@ -3,10 +3,12 @@ require(rworldmap)
 require(ggplot2)
 require(dplyr)
 library(maptools)
+source("lib/uvozi.zemljevid.r", encoding = "UTF-8")
 
 read.csv(file = "podatki/NATO-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> NATO
 read.csv(file = "podatki/USD-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> CurUSD
 read.csv(file = "podatki/GDP-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> GDP
+read.csv(file = "podatki/PerCap-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> GDP
 
 
 NORD1 = NATO[order(NATO$'Military expenditures 2014 US millions',decreasing = TRUE),]
@@ -41,8 +43,10 @@ test_data <- data.frame(
   var1 = 150 + c(0, cumsum(runif(49, -10, 10))),
   date = seq.Date(as.Date("2002-01-01"), by="1 month", length.out=100))
 
-svet <- readShapeSpatial("podatki/mape/ne_110m_admin_0_countries.shp")
+#svet <- readShapeSpatial("podatki/mape/ne_110m_admin_0_countries.shp")
 #testi <- merge(svet, sel2)
+
+svet <- uvozi.zemljevid("http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip","ne_110m_admin_0_countries",force=TRUE)
 
 ptm <- proc.time()
 plot(svet,xlim=c(-124.5, -115),ylim=c(15, 115))
@@ -69,7 +73,7 @@ ptm <- proc.time()
 print(zem)
 proc.time() - ptm
 
-row.names(GDP)[c(140,82,52,112,16)] <- c("Russia","China", "Dominican Republic", "Bosnia and Herzegovina","Ivory Coast")
+row.names(GDP)[c(140,82,52,112,16,141)] <- c("Russia","China", "Dominican Republic", "Bosnia and Herzegovina","Ivory Coast", "Republic of Serbia")
 row.names(GDP)[c(12,15,142,61,162)] <- c("Central African Republic", "Democratic Republic of the Congo", "Slovakia", "Trinidad and Tobogo","United Arab Emirates")
 row.names(GDP)[c(131,147,116,63,85,25)] <- c("Macedonia", "United Kingdom","Czech Republic","United States of America", "South Korea","Guinea Bissau")
 
@@ -77,5 +81,11 @@ row.names(GDP)[c(131,147,116,63,85,25)] <- c("Macedonia", "United Kingdom","Czec
 GDP[,"sovereignt"]<-row.names(GDP)
 zt <- merge(x=GDP,y=hz,all.y=TRUE)
 zt<- zt[with(zt, order(sovereignt, order)), ]
-zem <- ggplot() + geom_polygon(data = zt, aes(x=long, y=lat, group=group,fill=zt$"2014")) + scale_fill_gradient(low="#2412b4", high="#ff2a1a")
+
+zem <- ggplot() + geom_polygon(data = zt, aes(x=long, y=lat, group=group,fill=zt$"2011")) + scale_fill_gradient(low="#2412b4", high="#ff2a1a")
+
+ptm <- proc.time()
 print(zem)
+proc.time() - ptm
+
+

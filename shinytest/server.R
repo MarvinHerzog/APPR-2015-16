@@ -15,6 +15,7 @@ setwd("..")
 CurUSD = read.csv(file = "podatki/USD-urejeno.csv", sep = ",", dec = ".", check.names = FALSE)
 
 NATO <- read.csv(file = "podatki/NATO-urejeno.csv", sep = ",", dec = ".", check.names = FALSE)
+read.csv(file = "podatki/PerCap-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> PerCap
 read.csv(file = "podatki/GDP-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> GDP
 
 
@@ -55,8 +56,8 @@ shinyServer(function(input, output) {
     print(p11())
   })
   
-  row.names(GDP) <- GDP[,1]
-  GDP = GDP[,-1]
+  row.names(PerCap) <- PerCap[,1]
+  PerCap = PerCap[,-1]
 
   
   p22 <- reactive({
@@ -65,16 +66,20 @@ shinyServer(function(input, output) {
 
     
     
-    GDPt = t(GDP)
-
+    PerCapt = t(PerCap)
+    PerCapt<-as.data.frame(PerCapt)
+    names(PerCapt)[16]<-"Côte dIvoire"
+    PerCapt<-as.matrix(PerCapt)
     
-    sel = subset(GDPt, select=drzave)
+    View(PerCapt)
+    
+    sel = subset(PerCapt, select=drzave)
     sel2 = melt(sel,id=row.names(sel))
     
     sel2 = na.omit(sel2) #vklopljeno po želji
     
-    plGDP<- ggplot(sel2) + aes(x=Var1, y = value,colour=Var2) + geom_line() 
-    plGDP <- plGDP + xlab("Leto") + ylab("Delež BDP")
+    plPerCap<- ggplot(sel2) + aes(x=Var1, y = value,colour=Var2) + geom_line() 
+    plPerCap <- plPerCap + xlab("Leto") + ylab("Izdatki PC")
     
     
     
