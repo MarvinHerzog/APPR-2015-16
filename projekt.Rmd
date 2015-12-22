@@ -1,14 +1,15 @@
 ---
 title: "Poročilo pri predmetu Analiza podatkov s programom R"
-author: "Študent FMF"
+author: "Marvin Herzog"
 output:
+  html_document: default
   pdf_document:
-    latex_engine: xelatex
     includes:
       in_header: lib/styles.sty
+    latex_engine: xelatex
 ---
 
-```{r setup, echo=FALSE, results='hide', message=FALSE}
+```{r setup, echo=FALSE, results='hide', message=FALSE,warning=FALSE}
 # Če želimo nastaviti pisave v PDF-ju, odkomentiramo
 # in sledimo navodilom v programu.
 #source("fontconfig.r", encoding = "UTF-8")
@@ -17,19 +18,46 @@ output:
 source("lib/libraries.r", encoding = "UTF-8")
 ```
 
-# Izbira teme
+# Analiza svetovnih vojaških izdatkov
 
-Za vzorec bomo prikazali nekaj podatkov o slovenskih občinah.
+V tem projektu sem analiziral ter vizualiziral naslednje reči:
+
+* delež vojaških izdatkov v BDP po državah skozi čas,
+* višino izdatkov na prebivalca
+* vojaški izdatki v NATU
+* ...
+
+Poročilo v Rmd je zgolj provizorično. Glavni razvoj projekta poteka preko ogrodja Shiny.
+
 
 ***
 
-# Obdelava, uvoz in čiščenje podatkov
+# Obdelava, uvoz, čiščenje in vizualizacija podatkov
 
-```{r uvoz, echo=FALSE}
-source("obdelava.r", encoding = "UTF-8")
+```{r uvoz, echo=FALSE,results='hide',message=FALSE,warning=FALSE}
+#source("obdelava.R", encoding = "UTF-8")
+#print(zem)
 ```
 
-Uvozili smo podatke o občinah v obliki CSV s statističnega urada ter v obliki HTML
-z Wikipedije. Poglejmo si začetka obeh uvoženih razpredelnic.
+Večina virov je bila v neurejenih CSV formatih, podatki o NATU so iz tabele na Wikipediji. Te sem uredil in jih vizualiziral
+
+Tu je primer zemljevida za Azijo:
+
+```{r echo=FALSE}
+zem
 
 
+```
+
+***
+
+prav tako imam nekaj grafov:
+
+```{r echo=FALSE}
+plNAT
+plGDP
+
+
+```
+
+***
