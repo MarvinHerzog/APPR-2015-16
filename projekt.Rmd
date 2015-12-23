@@ -61,3 +61,27 @@ plGDP
 ```
 
 ***
+
+tabelce:
+
+**Delež BDP**
+
+```{r echo=FALSE}
+kable(head(GDP))
+```
+
+**NATO izdatki**
+
+```{r echo=FALSE}
+kable(head(NATO))
+```
+
+**Izdatki v milijonih USD**
+
+```{r echo=FALSE}
+kable(head(CurUSD))
+
+
+```
+
+***
