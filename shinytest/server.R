@@ -12,6 +12,8 @@ require(gsubfn)
 require(ggplot2)
 require(reshape2)
 setwd("..")
+source("lib/uvozi.zemljevid.r", encoding = "UTF-8")
+
 CurUSD = read.csv(file = "podatki/USD-urejeno.csv", sep = ",", dec = ".", check.names = FALSE)
 
 NATO <- read.csv(file = "podatki/NATO-urejeno.csv", sep = ",", dec = ".", check.names = FALSE)
@@ -49,7 +51,9 @@ shinyServer(function(input, output) {
       tr = c(1:(29-input$bins))
       input$bins2 -> zz
   }
-    p1<-ggplot(NORD1[-tr,]) + aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +geom_bar(stat="identity") + xlab("Country")+ ylab("US millions")+ coord_flip()
+    p1<-ggplot(NORD1[-tr,]) +
+      aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +
+      geom_bar(stat="identity") + xlab("Country")+ ylab("US millions")+ coord_flip()
     #p1 <-barplot(NORD1$`Military expenditures 2014 US millions`[-tr], horiz=TRUE,names.arg = NORD1$Country[-tr])
     })
   
@@ -149,6 +153,7 @@ shinyServer(function(input, output) {
   filter(zt,zt$admin=="Russia")-> rus
   rus[39] <-"Asia"
   zt[zt$admin=="Russia",]<-rus
+  names(zt)[2:28] <- paste("l",names(zt)[2:28],sep="")
   
   p44 <- reactive({
     
@@ -166,9 +171,10 @@ shinyServer(function(input, output) {
       ut <- filter(ut,ut$long>-50)
     }else
       ut <-filter(zt,zt$continent==kontinent)
-    zemy <- ggplot() + geom_polygon(data = ut, aes(x=long,y=lat,group=group,fill=get(l2))) +
+    zu = paste("l",l2,sep="")
+    zemy <- ggplot() + geom_polygon(data = ut, aes_string(x="long",y="lat",group="group", fill=zu)) +
       scale_fill_gradient("% BDP",low="#ff6666", high="#000000",limits=c(0,10))
-    
+
     
     #p1 <-barplot(NORD1$`Military expenditures 2014 US millions`[-tr], horiz=TRUE,names.arg = NORD1$Country[-tr])
   })
