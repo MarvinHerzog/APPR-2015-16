@@ -119,7 +119,9 @@ kable(head(NATO))
 
 V tej tabeli je (zaenkrat) uporabljen zgolj četrti stolpec. Vsi razen prvega (character) so tipa numeric.
 
-<!--
+<!--ČE NE DELA ODKOMENTIRAJ USTREZEN DEL V obdelava.R
+
+
 
 ***
 Tu je primer zemljevida za Azijo:

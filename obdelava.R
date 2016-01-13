@@ -112,4 +112,20 @@ zem <- ggplot() + geom_polygon(data = ut , aes(x=long,y=lat,group=group,fill=`20
 #proc.time() - ptm
 
 #ggplot(filter(GDPtidy,Country !="Kuwait")) + aes(x=`Year`,y=`%GDP`) + geom_point()+ geom_jitter() + geom_boxplot()
-ggplot(GDPtidy) + aes(x=`Year`,y=`%GDP`) + geom_point()+ geom_jitter() + geom_boxplot(alpha=0.7)+coord_cartesian(ylim = c(0,7)) +geom_smooth(method="lm")
+meanUSD = colMeans(CurUSD[2:28],na.rm=TRUE)
+meanGDP=colMeans(GDP[1:27],na.rm=TRUE)*100
+meanPerCap = colMeans(PerCap[2:28],na.rm=TRUE)
+
+
+ggplot(GDPtidy) + aes(x=`Year`,y=`%GDP`) + 
+  geom_point(alpha = 0.5)+ geom_jitter(alpha = 0.5) +
+  geom_boxplot(colour="black",alpha=0.1)+coord_cartesian(ylim = c(0,7)) +
+  geom_smooth(method="loess",aes(group = 1))
+
+ggplot(PerCaptidy) + aes(x=`Year`,y=`Expenditures per capita in USD`) + 
+  geom_point(alpha = 0.5)+ geom_jitter(alpha = 0.5) + geom_boxplot(alpha=0.5)+
+  coord_cartesian(ylim = c(0,600)) +geom_smooth(method="loess",aes(group = 1))
+
+ggplot(CurUSDtidy) + aes(x=`Year`,y=`US millions`) + geom_point(alpha = 0.5)+ 
+  geom_jitter(alpha = 0.5) + geom_boxplot(alpha=0.1)+coord_cartesian(ylim = c(0,15000)) +
+  geom_smooth(method="loess",aes(group = 1))
