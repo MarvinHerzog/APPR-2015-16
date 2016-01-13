@@ -9,10 +9,10 @@ read.csv(file = "podatki/NATO-urejeno.csv", sep = ",", dec = ".", check.names = 
 read.csv(file = "podatki/USD-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> CurUSD
 read.csv(file = "podatki/GDP-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> GDP
 read.csv(file = "podatki/PerCap-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> PerCap
-
+read.csv(file = "podatki/debt-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> debt
 
 NORD1 = NATO[order(NATO$'Military expenditures 2014 US millions',decreasing = TRUE),]
-ggplot(NORD1) + aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +xlab("Country")+geom_bar(stat="identity") + coord_flip()
+norplot <- ggplot(NORD1) + aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +xlab("Country")+geom_bar(stat="identity") + coord_flip()
 
 
 plNAT<-ggplot(NORD1[-c(1,2),]) + aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +geom_bar(stat="identity") + xlab("Country")+ coord_flip()
@@ -42,7 +42,7 @@ sel2 = melt(sel,id=row.names(sel))
 sel2 = na.omit(sel2) #vklopljeno po želji
 
 plGDP<- ggplot(sel2) + aes(x=Var1, y = value,colour=Var2) + geom_line() + xlab("Leto")+ylab("% BDP")+scale_colour_discrete("Države")
-plGDP
+#plGDP
 
 
 
@@ -107,8 +107,9 @@ if(is.null(kontinent)){
 zem <- ggplot() + geom_polygon(data = ut , aes(x=long,y=lat,group=group,fill=`2011`*100)) +
   scale_fill_gradient("% BDP",low="#ff6666", high="#000000") 
 
-ptm <- proc.time()
-zem
-proc.time() - ptm
+#ptm <- proc.time()
+#zem
+#proc.time() - ptm
 
-
+#ggplot(filter(GDPtidy,Country !="Kuwait")) + aes(x=`Year`,y=`%GDP`) + geom_point()+ geom_jitter() + geom_boxplot()
+ggplot(GDPtidy) + aes(x=`Year`,y=`%GDP`) + geom_point()+ geom_jitter() + geom_boxplot(alpha=0.7)+coord_cartesian(ylim = c(0,7)) +geom_smooth(method="lm")

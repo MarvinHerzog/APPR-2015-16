@@ -1,7 +1,7 @@
 ---
 title: "Poročilo pri predmetu Analiza podatkov s programom R"
 author: "Marvin Herzog"
-runtime: shiny
+<!--runtime: shiny-->
 output:
   html_document: default
   pdf_document:
@@ -146,7 +146,7 @@ plGDP
 ***
 # **Shiny**
 * ta del bom kasneje z gumbi integriral v prejšnji del poročila
-```{r, echo = FALSE,fig.align='left'}
+```{r, echo = FALSE}
 shinyAppDir("shinytest",
             options=list(
     width="100%", height=3000

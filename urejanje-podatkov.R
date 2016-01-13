@@ -52,6 +52,7 @@ tabela <- stran %>% html_nodes(xpath ="//table[3]") %>% html_table()
 
 
 
+
 NATO <- data.frame(tabela)
 bt <- sub("^Â\\s","",NATO[,1])
 NATO[,1] <- bt
@@ -69,6 +70,22 @@ for(i in 2:7){
 
 write.table(NATO, file = "podatki/NATO-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
 
+
+
+debturl <- "https://en.wikipedia.org/wiki/List_of_countries_by_public_debt"
+stran <- html_session(debturl) %>% read_html(encoding = "UTF-8")
+tabela <- stran %>% html_nodes(xpath ="//table[@class='wikitable sortable']")
+html_table(tabela, trim = TRUE) -> uzi
+
+debt <-data.frame(uzi)
+
+
+debt[,3] = gsub("â|€|‡|Â","",debt[,3])
+debt[,1] = gsub("^Â\\s","",debt[,1])
+debt[,3] <- as.numeric(debt[,3])
+debt <- debt[,c(1,3,4)]
+names(debt) = c("Country","Public debt as %GDP","Year")
+write.table(debt, file = "podatki/debt-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
 
 
 #uredimo GDP
