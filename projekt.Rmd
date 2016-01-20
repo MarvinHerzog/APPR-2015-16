@@ -29,7 +29,8 @@ V tem projektu sem analiziral ter vizualiziral naslednje reči:
 * ...
 
 
-
+TODO:
+grupiranje držav po izdatki/GDP, GDP, ... 
 
 ***
 
@@ -151,7 +152,7 @@ plGDP
 ***
 ***
 # **Shiny**
-* ta del bom kasneje z gumbi integriral v prejšnji del poročila
+* ta del bom kasneje (morda) integriral v prejšnji del poročila
 ```{r, echo = FALSE}
 shinyAppDir("shinytest",
             options=list(
