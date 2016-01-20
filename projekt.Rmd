@@ -97,7 +97,11 @@ summary(GDPtidy[,3])
 Padajoče urejeno.
 Povprečni izdatki so okoli 2.5% BDP. Zanimiva anomalija je maksimum - Kuvajt leta 1991, z 117% BDP namenjenega za vojaške izdatke (posledica zalivske vojne l. 90-91)
 
+```{r echo=FALSE,warning=FALSE,fig.width=15}
+GDPscat
+```
 
+Zdi se, da zadnjih 30 let svetovno povprečje deleža vojaških izdaatkov v BDP vztrajno pada.
 
 ## Izdatki per capita
 

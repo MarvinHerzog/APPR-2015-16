@@ -10,6 +10,7 @@ read.csv(file = "podatki/USD-urejeno.csv", sep = ",", dec = ".", check.names = F
 read.csv(file = "podatki/GDP-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> GDP
 read.csv(file = "podatki/PerCap-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> PerCap
 read.csv(file = "podatki/debt-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> debt
+read.csv(file = "podatki/PC2-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> PC2
 
 NORD1 = NATO[order(NATO$'Military expenditures 2014 US millions',decreasing = TRUE),]
 norplot <- ggplot(NORD1) + aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +xlab("Country")+geom_bar(stat="identity") + coord_flip()
@@ -117,15 +118,34 @@ meanGDP=colMeans(GDP[1:27],na.rm=TRUE)*100
 meanPerCap = colMeans(PerCap[2:28],na.rm=TRUE)
 
 
-ggplot(GDPtidy) + aes(x=`Year`,y=`%GDP`) + 
-  geom_point(alpha = 0.5)+ geom_jitter(alpha = 0.5) +
-  geom_boxplot(colour="black",alpha=0.1)+coord_cartesian(ylim = c(0,7)) +
-  geom_smooth(method="loess",aes(group = 1))
+GDPscat = ggplot(GDPtidy) + aes(x=`Year`,y=`%GDP`) + 
+  geom_point(alpha = 0.3) + 
+  scale_color_discrete(guide = FALSE)+
+  geom_jitter(position = position_jitter(width = 0.2),alpha = 0.3) +
+  stat_summary(fun.y=mean, geom="point",size=15,shape="__", aes(group=1,color="#FF0000")) +
+  geom_boxplot(colour="black",alpha=0.1,outlier.size = 0,coef=0)+coord_cartesian(ylim = c(0,7)) +
+  geom_smooth(method="lm",aes(group = 1))
 
-ggplot(PerCaptidy) + aes(x=`Year`,y=`Expenditures per capita in USD`) + 
-  geom_point(alpha = 0.5)+ geom_jitter(alpha = 0.5) + geom_boxplot(alpha=0.5)+
-  coord_cartesian(ylim = c(0,600)) +geom_smooth(method="loess",aes(group = 1))
+PerCapscat=ggplot(PerCaptidy) + aes(x=`Year`,y=`Expenditures per capita in USD`) + 
+  geom_point(alpha = 0.3) + 
+  geom_jitter(position = position_jitter(width = 0.2),alpha = 0.3) +
+  stat_summary(fun.y=mean, geom="point",size=15,shape="__", aes(group=1,color="#FF0000")) +
+  geom_boxplot(colour="black",alpha=0.1,outlier.size = 0,coef=0)+
+  geom_smooth(method="lm",aes(group = 1))+
+  coord_cartesian(ylim = c(0,600))  
 
-ggplot(CurUSDtidy) + aes(x=`Year`,y=`US millions`) + geom_point(alpha = 0.5)+ 
-  geom_jitter(alpha = 0.5) + geom_boxplot(alpha=0.1)+coord_cartesian(ylim = c(0,15000)) +
-  geom_smooth(method="loess",aes(group = 1))
+
+  
+  CurUSDscat=ggplot(CurUSDtidy) + aes(x=`Year`,y=`US millions`)+
+    geom_point(alpha = 0.3) + 
+    geom_jitter(position = position_jitter(width = 0.2),alpha = 0.3) +
+    scale_colour_continuous(guide = FALSE)+
+    stat_summary(fun.y=mean, geom="point",size=15,shape="__", aes(group=1,color="#FF0000")) +
+    geom_boxplot(colour="black",alpha=0.1,outlier.size = 0,coef=0)+
+    geom_smooth(method="lm",aes(group = 1))+
+    coord_cartesian(ylim = c(0,15000))  
+  
+  zuz = merge(PC2,GDPtidy)
+  zuz=zuz[complete.cases(zuz),]
+  k <- kmeans(zuz[,c(3,4)], 4,nstart=1000)
+  zuz[5]=k[1]

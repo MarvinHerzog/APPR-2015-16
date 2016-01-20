@@ -87,6 +87,29 @@ debt <- debt[,c(1,3,4)]
 names(debt) = c("Country","Public debt as %GDP","Year")
 write.table(debt, file = "podatki/debt-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
 
+###
+PCurl <- "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_%28PPP%29_per_capita"
+stran <- html_session(PCurl) %>% read_html(encoding = "UTF-8")
+tabela <- stran %>% html_nodes(xpath ="//table[@style='margin-left:auto;margin-right:auto;text-align: right']")
+html_table(tabela[2], trim = TRUE) -> uzi
+
+PC2 <-data.frame(uzi)
+
+PC2=PC2[-1]
+PC2=PC2[-c(81,148,153),]
+#PC2[,3] = gsub("â|€|‡|Â","",PC2[,3])
+PC2[,1] = gsub("(Â\\s)+","",PC2[,1])
+PC2[,2] = gsub(",","",PC2[,2])
+PC2[,2] <- as.numeric(PC2[,2])
+names(PC2) = c("Country","GDPpc","Year")
+write.table(PC2, file = "podatki/PC2-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
+###
+
+
+
+
+
+
 
 #uredimo GDP
 GDP = read.csv(file = "podatki/SIPRI Milex data 1988-2014 Nov15 - Share of GDP.csv", sep = ";", dec = ".")
