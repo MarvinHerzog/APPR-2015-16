@@ -135,7 +135,7 @@ PerCapscat=ggplot(PerCaptidy) + aes(x=`Year`,y=`Expenditures per capita in USD`)
   coord_cartesian(ylim = c(0,600))  
 
 
-  
+
   CurUSDscat=ggplot(CurUSDtidy) + aes(x=`Year`,y=`US millions`)+
     geom_point(alpha = 0.3) + 
     geom_jitter(position = position_jitter(width = 0.2),alpha = 0.3) +
@@ -145,7 +145,39 @@ PerCapscat=ggplot(PerCaptidy) + aes(x=`Year`,y=`Expenditures per capita in USD`)
     geom_smooth(method="lm",aes(group = 1))+
     coord_cartesian(ylim = c(0,15000))  
   
+  
+  
+  
+  
+  
+  
+  
+  GDPtidy = melt(GDP)
+  names(GDPtidy) <- c("Country", "Year","%GDP")
+  GDPtidy[,3]<-GDPtidy[,3]*100
+  
+  
+  as.character(PC2[,1])->PC2[,1]
+  PC2[c(11),1]<-c("United States of America")
   zuz = merge(PC2,GDPtidy)
   zuz=zuz[complete.cases(zuz),]
-  k <- kmeans(zuz[,c(3,4)], 4,nstart=1000)
-  zuz[5]=k[1]
+  test = zuz
+  test[,c(3,4)] = scale(test[,c(3,4)])
+  k <- kmeans(test[,c(3,4)], 4,nstart=1000)
+  test[5]=k[1]
+  test[,5]<-factor(test[,5])
+  km=ggplot(zuz)+aes(x=GDPpc,y=`%GDP`,color = test$cluster)+geom_point()+ scale_color_discrete("cluster")
+  km
+  names(test)[1]<-"admin"
+  zt2=merge(zt,test)
+  zt2<- zt2[with(zt2, order(admin, order)), ]
+  zem2 <- ggplot() + geom_polygon(data = zt2 , aes(x=long,y=lat,group=group,fill=cluster)) +
+    scale_fill_discrete()
+  zem2
+  
+  
+  
+  
+  
+  
+  
