@@ -2,6 +2,7 @@ require(reshape2)
 #require(rworldmap)
 require(ggplot2)
 require(dplyr)
+require(gridExtra)
 library(maptools)
 source("lib/uvozi.zemljevid.r", encoding = "UTF-8")
 
@@ -156,24 +157,27 @@ PerCapscat=ggplot(PerCaptidy) + aes(x=`Year`,y=`Expenditures per capita in USD`)
   names(GDPtidy) <- c("Country", "Year","%GDP")
   GDPtidy[,3]<-GDPtidy[,3]*100
   
-  
+  set.seed(1)
   as.character(PC2[,1])->PC2[,1]
   PC2[c(11),1]<-c("United States of America")
   zuz = merge(PC2,GDPtidy)
   zuz=zuz[complete.cases(zuz),]
   test = zuz
   test[,c(3,4)] = scale(test[,c(3,4)])
-  k <- kmeans(test[,c(3,4)], 4,nstart=1000)
+  k <- kmeans(test[,c(3,4)], 4,nstart=5000)
   test[5]=k[1]
   test[,5]<-factor(test[,5])
-  km=ggplot(zuz)+aes(x=GDPpc,y=`%GDP`,color = test$cluster)+geom_point()+ scale_color_discrete("cluster")
-  km
+  km=ggplot(zuz)+aes(x=GDPpc,y=`%GDP`,color = test$cluster)+geom_point()+
+    scale_color_discrete("Skupina")
+  #km
   names(test)[1]<-"admin"
-  zt2=merge(zt,test)
+  zt2=merge(x=zt,y=test,all.x=TRUE)
   zt2<- zt2[with(zt2, order(admin, order)), ]
-  zem2 <- ggplot() + geom_polygon(data = zt2 , aes(x=long,y=lat,group=group,fill=cluster)) +
-    scale_fill_discrete()
-  zem2
+  zem2 <- ggplot() + 
+    geom_polygon(data = zt2 , aes(x=long,y=lat,group=group,fill=cluster)) +
+    scale_fill_discrete("Skupina")
+    
+  #zem2
   
   
   
