@@ -8,6 +8,7 @@ output:
     includes:
       in_header: lib/styles.sty
     latex_engine: xelatex
+runtime: shiny
 ---
 
 ```{r setup, echo=FALSE, results='hide', message=FALSE,warning=FALSE}
@@ -77,6 +78,13 @@ Pri naslednjih treh tabelah je:
 
 Držav, za katere imam vsaj kakšne podatke je okoli 163.
 
+## NATO izdatki
+
+```{r echo=FALSE}
+kable(head(NATO))
+```
+
+V tej tabeli je uporabljen zgolj četrti stolpec za prikaz v Shiny-ju. Vsi razen prvega (character) so tipa numeric.
 
 ## Izdatki v milijonih USD
 
@@ -87,22 +95,6 @@ summary(CurUSDtidy[,3])
 ```
 
 Daleč spredaj po izdatkih je seveda ZDA.
-
-## Delež BDP
-
-```{r echo=FALSE}
-kable(head(GDPtidy[order(GDPtidy$`%GDP`,decreasing = TRUE),]),row.names = FALSE)
-summary(GDPtidy[,3])
-```
-
-Padajoče urejeno.
-Povprečni izdatki so okoli 2.5% BDP. Zanimiva anomalija je maksimum - Kuvajt leta 1991, z 117% BDP namenjenega za vojaške izdatke (posledica zalivske vojne l. 90-91)
-
-```{r echo=FALSE,warning=FALSE,fig.width=15}
-GDPscat
-```
-
-Zdi se, da zadnjih 30 let svetovno povprečje deleža vojaških izdaatkov v BDP vztrajno pada.
 
 ## Izdatki per capita
 
@@ -116,13 +108,34 @@ Padajoče urejeno.
 Z izjemo Kuvajta in zalivske vojne tukaj prednjačijo države na Arabskem polotoku. Takoj za temi sta ZDA in Izrael.
 
 
-## NATO izdatki
+
+## Delež BDP namenjen za vojaške izdatke
 
 ```{r echo=FALSE}
-kable(head(NATO))
+kable(head(GDPtidy[order(GDPtidy$`%GDP`,decreasing = TRUE),]),row.names = FALSE)
+summary(GDPtidy[,3])
 ```
 
-V tej tabeli je (zaenkrat) uporabljen zgolj četrti stolpec. Vsi razen prvega (character) so tipa numeric.
+Padajoče urejeno.
+Povprečni izdatki so okoli 2.5% BDP. Zanimiva anomalija je maksimum - Kuvajt leta 1991, z 117% BDP namenjenega za vojaške izdatke (posledica zalivske vojne l. 90-91)
+
+```{r echo=FALSE,warning=FALSE,fig.width=15}
+GDPscat
+```
+
+Zdi se, da zadnjih 30 let svetovno povprečje deleža vojaških izdatkov v BDP vztrajno pada.
+
+Po nekaj različnih kombinacijah podatkov sem naletel na zanimivo grupiranje, ki povezuje izdatke kot delež BDP ter BDP per capita (torej nekako povezuje razvitost države z obsegom vojaških izdatkov). Podatki so normalizirani, uporabljen je k-means. Pri štirih centroidih je slika sledeča:
+
+```{r echo=FALSE,warning=FALSE,fig.width=15,fig.height=6}
+grid.arrange(km,zem2,ncol=2)
+```
+
+* Prva skupina so revnejše države z visokim deležem vojaških izdatkov.
+* Druga so revnejše z nizkim deležem.
+* Tretja skupina so bogatejše države (30.000$/pc +), ki so pa precej razpršene. Nekatere imajo zelo nizek delež izdatkov (Luksemburg), spet druge pa relativno visok (ZDA, Arabski Emirati).
+* Četrta skupina sta zgolj Oman in Savdska Arabija, ki močno odstopata po višini vojaških izdatkov
+
 
 <!--ČE NE DELA ODKOMENTIRAJ USTREZEN DEL V obdelava.R
 
@@ -152,7 +165,7 @@ plGDP
 ***
 ***
 # **Shiny**
-* ta del bom kasneje (morda) integriral v prejšnji del poročila
+* Animiran prikaz nekaterih podatkov
 ```{r, echo = FALSE}
 shinyAppDir("shinytest",
             options=list(
