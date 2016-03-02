@@ -1,5 +1,6 @@
 # Analiza svetovnih vojaških izdatkov
 Avtor: Marvin Herzog
+mail: marvin.herzog@student.fmf.uni-lj.si
 
 V tem projektu nameravam med drugimi analizirati naslednje stvari:
 * povezavo vojaških izdatkov z BDP
