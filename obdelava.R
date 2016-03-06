@@ -17,11 +17,21 @@ ggplot(NORD1) + aes(x = reorder(Country,`Military expenditures 2014 US millions`
 
 plNAT<-ggplot(NORD1[-c(1,2),]) + aes(x = reorder(Country,`Military expenditures 2014 US millions`), y= `Military expenditures 2014 US millions`) +geom_bar(stat="identity") + xlab("Country")+ coord_flip()
 
+CurUSDtidy = melt(CurUSD)
+names(CurUSDtidy) <- c("Country", "Year","US millions")
 
+PerCaptidy = melt(PerCap)
+
+names(PerCaptidy) <- c("Country", "Year","Expenditures per capita in USD")
+
+GDPtidy = melt(GDP)
+names(GDPtidy) <- c("Country", "Year","%GDP")
+GDPtidy[,3]<-GDPtidy[,3]*100
 
 
 
 drzave = c("USA","Slovenia")
+
 row.names(GDP) <- GDP[,1]
 GDP = GDP[,-1]
 GDPt = t(GDP)

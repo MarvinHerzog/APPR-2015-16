@@ -11,7 +11,7 @@ shinyUI(fluidPage(
 
   
   # Application title
-  headerPanel("Analiza svetovnih vojaških izdatkov"),
+  #headerPanel("Analiza svetovnih vojaških izdatkov"),
   div(style = "height:100px"),
   
   

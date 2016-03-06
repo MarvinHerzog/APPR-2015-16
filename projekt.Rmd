@@ -1,6 +1,7 @@
 ---
 title: "Poročilo pri predmetu Analiza podatkov s programom R"
 author: "Marvin Herzog"
+runtime: shiny
 output:
   html_document: default
   pdf_document:
@@ -27,20 +28,100 @@ V tem projektu sem analiziral ter vizualiziral naslednje reči:
 * vojaški izdatki v NATU
 * ...
 
-Poročilo v Rmd je zgolj provizorično. Glavni razvoj projekta poteka preko ogrodja Shiny.
+
 
 
 ***
 
-# Obdelava, uvoz, čiščenje in vizualizacija podatkov
+# Uvoz in čiščenje podatkov
 
 ```{r uvoz, echo=FALSE,results='hide',message=FALSE,warning=FALSE}
 #source("obdelava.R", encoding = "UTF-8")
 #print(zem)
 ```
 
-Večina virov je bila v neurejenih CSV formatih, podatki o NATU so iz tabele na Wikipediji. Te sem uredil in jih vizualiziral
+Večina virov je bila v neurejenih CSV formatih, podatki o NATU so iz tabele na Wikipediji. Tukaj je nekaj izsekov iz kode za uvoz ter obdelavo:
 
+```{r eval=FALSE}
+NATOurl <- "https://en.wikipedia.org/wiki/Member_states_of_NATO"
+stran <- html_session(NATOurl) %>% read_html(encoding = "UTF-8")
+tabela <- stran %>% html_nodes(xpath ="//table[3]") %>% html_table()
+...
+names(NATO) <- gsub("(\\.)+"," ", names(NATO)) %>% gsub("\\s$","",.) %>% gsub("Â","%",.)
+for(i in 2:7){
+  NATO[,i] = gsub(",","",NATO[,i])
+  NATO[,i] <- as.numeric(NATO[,i])
+  
+}
+```
+
+```{r eval=FALSE}
+GDP = read.csv(file = "podatki/SIPRI Milex data 1988-2014 Nov15 - Share of GDP.csv", sep = ";", dec = ".")
+...
+filter(GDP,GDP$'1988'!="")->GDP
+GDP <- apply(GDP,2,function(x) gsub("xxx",NA,x))
+...
+GDP <- filter(GDP, !apply(is.na(GDP[,-1]),1,all)) 
+write.table(GDP, file = "podatki/GDP-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
+```
+
+**Tabelce**:
+
+Obdelane tabele se nato shranijo v nov csv, da se izognem nepotrebnemu ponovnemu urejajanju.
+Pri naslednjih treh tabelah je:
+
+* prvi stolpec ('Country') vedno tipa character,
+* drugi stolpec 'Year' urejenostna spremenljivka (27 let),
+* tretji stolpec (vrednost) pa tipa numeric. 
+
+Držav, za katere imam vsaj kakšne podatke je okoli 163.
+
+
+## Izdatki v milijonih USD
+
+```{r echo=FALSE}
+kable(head(CurUSDtidy))
+summary(CurUSDtidy[,3])
+
+```
+
+Daleč spredaj po izdatkih je seveda ZDA.
+
+## Delež BDP
+
+```{r echo=FALSE}
+kable(head(GDPtidy[order(GDPtidy$`%GDP`,decreasing = TRUE),]),row.names = FALSE)
+summary(GDPtidy[,3])
+```
+
+Padajoče urejeno.
+Povprečni izdatki so okoli 2.5% BDP. Zanimiva anomalija je maksimum - Kuvajt leta 1991, z 117% BDP namenjenega za vojaške izdatke (posledica zalivske vojne l. 90-91)
+
+
+
+## Izdatki per capita
+
+```{r echo=FALSE}
+kable(head(PerCaptidy[order(PerCaptidy$`Expenditures per capita in USD`,decreasing = TRUE),]),row.names = FALSE)
+summary(PerCaptidy[,3])
+
+```
+
+Padajoče urejeno.
+Z izjemo Kuvajta in zalivske vojne tukaj prednjačijo države na Arabskem polotoku. Takoj za temi sta ZDA in Izrael.
+
+
+## NATO izdatki
+
+```{r echo=FALSE}
+kable(head(NATO))
+```
+
+V tej tabeli je (zaenkrat) uporabljen zgolj četrti stolpec. Vsi razen prvega (character) so tipa numeric.
+
+<!--
+
+***
 Tu je primer zemljevida za Azijo:
 
 ```{r echo=FALSE}
@@ -49,9 +130,8 @@ zem
 
 ```
 
-***
 
-prav tako imam nekaj grafov:
+Prav tako imam nekaj grafov, ti so dinamično animirani v Shiny aplikaciji:
 
 ```{r echo=FALSE}
 plNAT
@@ -60,28 +140,15 @@ plGDP
 
 ```
 
-***
-
-tabelce:
-
-**Delež BDP**
-
-```{r echo=FALSE}
-kable(head(GDP))
-```
-
-**NATO izdatki**
-
-```{r echo=FALSE}
-kable(head(NATO))
-```
-
-**Izdatki v milijonih USD**
-
-```{r echo=FALSE}
-kable(head(CurUSD))
-
-
-```
+-->
 
 ***
+***
+# **Shiny**
+* ta del bom kasneje z gumbi integriral v prejšnji del poročila
+```{r, echo = FALSE,fig.align='left'}
+shinyAppDir("shinytest",
+            options=list(
+    width="100%", height=3000
+  ))
+```

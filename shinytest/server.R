@@ -11,7 +11,11 @@ require(rvest)
 require(gsubfn)
 require(ggplot2)
 require(reshape2)
-setwd("..")
+
+if(grepl("shinytest",getwd())){
+  setwd("..")
+}
+
 source("lib/uvozi.zemljevid.r", encoding = "UTF-8")
 
 CurUSD = read.csv(file = "podatki/USD-urejeno.csv", sep = ",", dec = ".", check.names = FALSE)

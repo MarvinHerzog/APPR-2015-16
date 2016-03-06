@@ -73,7 +73,6 @@ write.table(NATO, file = "podatki/NATO-urejeno.csv",row.names=FALSE, na="",col.n
 
 #uredimo GDP
 GDP = read.csv(file = "podatki/SIPRI Milex data 1988-2014 Nov15 - Share of GDP.csv", sep = ";", dec = ".")
-View(GDP)
 GDP <- data.frame(lapply(GDP, as.character), stringsAsFactors=FALSE)
 
 names(GDP) <- lapply(GDP[5,],as.character)
@@ -108,14 +107,22 @@ write.table(GDP, file = "podatki/GDP-urejeno.csv",row.names=FALSE, na="",col.nam
 
 #uredimo Per Capita
 PerCap = read.csv(file = "podatki/SIPRI Milex data 1988-2014 Nov15 - Per capita.csv", sep = ";", dec = ".")
-View(PerCap)
 PerCap <- data.frame(lapply(PerCap, as.character), stringsAsFactors=FALSE)
 
-names(PerCap) <- lapply(PerCap[5,],as.character)
-PerCap[,-c(30:71)] ->PerCap
-PerCap[-c(192:199),] ->PerCap
-PerCap[-c(1:5),] ->PerCap
+
+#težave s kompatibilnostjo
+# names(PerCap) <- lapply(PerCap[5,],as.character)
+# PerCap[,-c(30:71)] ->PerCap
+# PerCap[-c(192:199),] ->PerCap
+# PerCap[-c(1:5),] ->PerCap
+# PerCap[,-2] ->PerCap
+
+names(PerCap) <- lapply(PerCap[6,],as.character)
+#PerCap[,-c(30:71)] ->PerCap
+PerCap[-c(191:200),] ->PerCap
+PerCap[-c(1:6),] ->PerCap
 PerCap[,-2] ->PerCap
+
 
 #for(i in 1:28){
 #  PerCap[,i] <- as.character(PerCap[,i])
@@ -138,4 +145,4 @@ for(i in 2:28){
 
 PerCap[2:28] <- apply(PerCap[2:28],2,function(x){x/100})
 PerCap <- filter(PerCap, !apply(is.na(PerCap[,-1]),1,all)) #po želji
-write.table(PerCap, file = "podatki/PerCap-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
+#write.table(PerCap, file = "podatki/PerCap-urejeno.csv",row.names=FALSE, na="",col.names=TRUE, sep=",")
