@@ -24,7 +24,7 @@ NATO <- read.csv(file = "podatki/NATO-urejeno.csv", sep = ",", dec = ".", check.
 read.csv(file = "podatki/PerCap-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> PerCap
 read.csv(file = "podatki/GDP-urejeno.csv", sep = ",", dec = ".", check.names = FALSE) -> GDP
 GDPzem <- GDP
-svet <- uvozi.zemljevid("http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip",pot.zemljevida= "ne_110m_admin_0_countries",mapa = "zemljevidi")
+svet <- uvozi.zemljevid("http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip",ime.zemljevida ="ne_110m_admin_0_countries",encoding="UTF-8") %>%fortify()
 
 
 NORD1 = NATO[order(NATO$'Military expenditures 2014 US millions',decreasing = TRUE),]
@@ -144,39 +144,45 @@ shinyServer(function(input, output) {
     return(inner_join(fo, data, by="id"))
   }
   
-  hz <-pretvori.zemljevid(svet)
+  #hz <-pretvori.zemljevid(svet)
+  hz=svet
   GDPzem=GDPzem*100
   row.names(GDPzem)[c(140,82,52,112,16,141)] <- c("Russia","China", "Dominican Republic", "Bosnia and Herzegovina","Ivory Coast", "Republic of Serbia")
   row.names(GDPzem)[c(12,15,142,61,162)] <- c("Central African Republic", "Democratic Republic of the Congo", "Slovakia", "Trinidad and Tobogo","United Arab Emirates")
   row.names(GDPzem)[c(131,147,116,63,85,25)] <- c("Macedonia", "United Kingdom","Czech Republic","United States of America", "South Korea","Guinea Bissau")
   GDPzem[,"admin"]<-row.names(GDPzem)
-  zt <- merge(x=GDPzem,y=hz,all.y=TRUE)
-  zt<- zt[with(zt, order(admin, order)), ]
-  zt <- zt[,-c(38:87)]
-  zt <- zt[,-c(43:47)]
-  filter(zt,zt$admin=="Russia")-> rus
-  rus[39] <-"Asia"
-  zt[zt$admin=="Russia",]<-rus
-  names(zt)[2:28] <- paste("l",names(zt)[2:28],sep="")
+  GDPzem = melt(GDPzem,measure.vars = 1:27)
+  zt <- merge(x=GDPzem,y=hz,all=TRUE,by.x="admin",by.y="ADMIN")
+  #zt<- zt[with(zt, order(admin, order))]
+  #zt <- zt[,-c(38:87)]
+  #zt <- zt[,-c(43:47)]
+  #filter(zt,zt$admin=="Russia")-> rus
+  #rus[39] <-"Asia"
+  #zt[zt$admin=="Russia",]<-rus
+  #ames(zt)[2:28] <- paste(names(zt)[2:28],sep="")
+  zt=zt %>%  mutate(CONTINENT = replace(CONTINENT, admin == "Russia", "Asia"))
+  
+  #View(zt)
   
   p44 <- reactive({
     
     kontinent = input$variable2
     leto = input$animation
-    l2 = as.character(leto)
-    
+    l2 = leto
+    zt=zt %>% arrange(variable,order)
     if(kontinent=="World"){
       ut = zt
     }else if(kontinent=="Europe"){
-      ut <-filter(zt,zt$continent==kontinent)
+      ut <-filter(zt,zt$CONTINENT==kontinent)
       ut <- filter(ut,ut$lat>20, ut$lat<75)
     }else if(kontinent=="Asia"){
-      ut <-filter(zt,zt$continent==kontinent)
+      ut <-filter(zt,zt$CONTINENT==kontinent)
       ut <- filter(ut,ut$long>-50)
-    }else
-      ut <-filter(zt,zt$continent==kontinent)
-    zu = paste("l",l2,sep="")
-    zemy <- ggplot() + geom_polygon(data = ut, aes_string(x="long",y="lat",group="group", fill=zu)) +
+    }else{
+      ut <-filter(zt,zt$CONTINENT==kontinent)
+    }
+
+    zemy <- ggplot() + geom_polygon(data = ut%>%filter(variable==leto),aes(x=long,y=lat,group=group, fill=value)) +
       scale_fill_gradient("% BDP",low="#ff6666", high="#000000",limits=c(0,10))
 
     
